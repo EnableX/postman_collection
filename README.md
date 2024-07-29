@@ -18,7 +18,7 @@ All API Credentials are paired to a Project. You will need to create a Project f
 
 ## Modify AppID/Key in Postman Collection
 
-    1) Change the Current Value of app_id and app_key variables.
+  1) Change the Current Value of app_id and app_key variables.
     
 
  ##   <img width="1100" alt="image" src="https://github.com/user-attachments/assets/7deed072-0d47-4153-8ce3-6341131763e1">
