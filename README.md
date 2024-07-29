@@ -10,7 +10,7 @@ https://learning.postman.com/docs/getting-started/importing-and-exporting/import
 
 All API Credentials are paired to a Project. You will need to create a Project first to receive the API credentials. To create Project, follow the given steps:
 
-  1)  Login to EnableX Portal
+  1)  Login to EnableX Portal [https://portal.enablex.io/]
 
   2)  Navigate: {Main Menu} Projects / My Projects
 
