@@ -1,0 +1,599 @@
+{
+	"info": {
+		"_postman_id": "bc9747aa-ea00-41b8-a803-02500502cd63",
+		"name": "EnableX WhatsApp Business API",
+		"description": "Collection of API routes for the Enablex Programmable WhatsApp API\n\n# Welcome to EnableX WhatsApp APIs\n\nProgrammable WhatsApp Business API from EnableX helps a business send and receive messages programmatically to/from users, can connect thousands of agents and bots to interact with customers. Additionally, the APIs can be integrated with numerous backend systems, such as CRM and marketing platforms.\n\n## Overview\n\nThe **WhatsApp Business Platform** is a tool for businesses to communicate with their customers through the WhatsApp messaging application. It offers features and tools to help businesses manage customer interactions and provide support and is designed to be easy to use with a simple interface. The platform provides end-to-end encryption for secure messaging and can help businesses build stronger relationships with their customers and drive growth.\n\n### How does it work?\n\nGetting started with WhatsApp requires you to read the [WhatsApp terms of use,](https://www.whatsapp.com/legal/business-terms/) [WhatsApp commerce policy](https://www.whatsapp.com/legal/commerce-policy/), and [WhatsApp Business messaging policy](https://www.whatsapp.com/legal/business-policy/?lang=en) outlining what businesses can join WhatsApp Business.\n\nHere is a simple step-by-step explanation to understand how the Programmable WhatsApp Business API works as a service with EnableX.\n\n- **Create a WhatsApp Project with EnableX:** The first step is for the business to set up a Project using the EnableX portal and add WhatsApp Service to it.\n    \n- **Create a WhatsApp Business Account**: The business also needs to create a WhatsApp Business Account through EnableX. Business needs to submit a Phone Number and Display Name to register with WhatsApp. EnableX Operations Team will get connected with you to take further all formalities needed for _WhatsApp Business Account (WABA)_ registration process.\n    \n- **Setup Webhook:** Business needs to setup a Webhook URL against the registered Phone Number to receive incoming message, delivery notifications and many other events related to your account.\n    \n- **Sends Message using the EnableX API:** Using Programmable WhatsApp Business API from EnableX, business can develop application to send message to any WhatsApp Messenger User. API supports messaging with different type of contents, e.g. Text, Image, Video, Audio, Document, Location, Contact, Interactive Components.\n    \n- **Receive messages over Webhook**: Receive incoming message from WhatsApp Messenger Users posted to your Webhook.\n    \n\n# Basic Terminology for WhatsApp Business Platform:\n\nLink to read Basic Terminology for [whatsApp Business Platform](https://www.enablex.io/developer/whatsapp/basic-terminology/)\n\n## API Authentication\n\nWhatsApp Business API are always used for Server to Server Call. EnableX provides 2 different type of authentication mechanism for API Calls, they are:\n\n- HTTP Basic Authentication\n    \n- Bearer Token\n    \n\nEither of these mechanism can be used to access WhatsApp Business API as per your application requirement.\n\n### HTTP Basic Authentication\n\nThe WhatsApp Business API uses HTTP Basic Authentication mechanism to authenticate API calls. Each API call is validated via the authentication header.\n\nEach EnableX WhatsApp Project is assigned with Access Credentials in the form of APP ID and APP Key. These are to be used for HTTP Basic Authentication as explained below:\n\n**Authorization Header**\n\n- **APP ID:** It is used as username.\n    \n- **APP KEY:** It is used as password\n    \n- Create **base64 encoding** for String **APP ID:APP KEY**. This encoded string is used in the Authorization header. Note that there is a colon (:) to separate APP ID and APP KEY in the string to encode\n    \n\n**Sample API Call Example**: Using HTTP Basic Authentication\n\n<img src=\"https://content.pstmn.io/9aee819b-a346-4f48-8119-16858b3995b9/aW1hZ2UucG5n\" width=\"910\" height=\"144\">\n\nIn the above example:\n\n- The `Authorization` header contains a value XXXXX which is a base64 encoded string of the **APP ID: APP KEY**\n    \n\n**Sample JSON for Error**: Authentication failed.\n\n<img src=\"https://content.pstmn.io/4760733b-259f-4349-8b2f-1d99f0fbdb7c/aW1hZ2UucG5n\" width=\"1190\" height=\"236\">\n\n### Bearer Token\n\nWhatsApp API works on a Bearer Token with a validity of 60 minutes. Using the Token, any number of API call can be made before it expires.\n\nUsing the [Token API](https://www.enablex.io/developer/wp-admin/post.php?post=7128&action=edit#_Token_API), a token can be created or re-created if the previous one has expired. The Token API returns an Expiry Time too. This helps you to re-create another token before it expires. If API call is made using an expired token, error is returned.\n\n**Sample API Call Example**: Using Bearer Token\n\n<img src=\"https://content.pstmn.io/2b517e9e-2a56-455a-8951-0a85c6ae6be5/aW1hZ2UucG5n\" width=\"594\" height=\"111\">\n\nIn the above example:\n\n- The `Authorization` header contains a value TTTTTTTTT which is a Token received from Token API.\n    \n\n**Sample JSON for Error**: Authentication failed.\n\n<img src=\"https://content.pstmn.io/895692ba-8e8b-4483-9302-cb69ecdc65cc/aW1hZ2UucG5n\" width=\"1178\" height=\"236\">\n\nAll API Credentials are paired to a Project. You will need to create a Project first to receive the API credentials. To create Project, follow the given steps:\n\n- Login to [EnableX Portal](https://portal.enablex.io)\n    \n- **Navigate**: {Main Menu} Projects / My Projects\n    \n- **Click**: Project Name – to reach Project Dashboard. Access Credentials for the Project can be found here.\n    \n\n## API Reference\n\nYou can refer to the detailed [API reference](https://www.enablex.io/developer/whatsapp-api/) to understand better about the request/response structure, request arguments, response variables, webhooks, etc.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10735955",
+		"_collection_link": "https://enablexteam.postman.co/workspace/EnableX_Team-Workspace~12cd1290-2290-49be-937a-0e80ebd42368/collection/10735955-bc9747aa-ea00-41b8-a803-02500502cd63?action=share&source=collection_link&creator=10735955"
+	},
+	"item": [
+		{
+			"name": "Send Message with Pre-Approved Templates",
+			"item": [
+				{
+					"name": "Send Text Message",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"to\": \"{mobile number}\",      //Recipient Phone No. Format: +6599999999 (65 is the Country Code, 99999999 is Phone No.)\r\n  \"type\": \"template\",          //Use template\r\n  \"template\": {                //Object contains Template Information and placeholder data for different components\r\n    \"language\": {             //Language information\r\n      \"policy\": \"deterministic\",      //Use deterministic\r\n      \"code\": \"{lang_code}\"           //Use language code using which the Template was created\r\n    },\r\n    \"name\": \"{template name}\"        //Template name\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}messages",
+							"host": [
+								"{{api_url}}messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send Text Message with Placeholder",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"to\": \"{mobile number}\",\r\n  \"type\": \"template\",\r\n  \"template\": {\r\n    \"language\": {\r\n      \"policy\": \"deterministic\",\r\n      \"code\": \"{lang_code}\"\r\n    },\r\n    \"name\": \"{template name}\",\r\n    \"components\": [             //This is used to define run-time data for placeholder variables and interactive buttons etc. for different type components. \r\n      {\r\n        \"type\": \"body\",    //Use body\r\n        \"parameters\": [    //Each Object in the array to carry value for placeholder variables. Objects are to be placed in the same order as they represent related placeholder in the Template.\r\n          {\r\n            \"type\": \"text\",    //Use text\r\n            \"text\": \"{placeholder data}\"   //Value for the placeholder\r\n          }\r\n        ]\r\n      }\r\n    ]\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}messages",
+							"host": [
+								"{{api_url}}messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send Message with Rich Media Template",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"to\": \"{mobile number}\",\r\n  \"type\": \"template\",\r\n  \"template\": {\r\n    \"language\": {\r\n      \"policy\": \"deterministic\",\r\n      \"code\": \"{lang_code}\"\r\n    },\r\n    \"name\": \"{template name}\",\r\n    \"components\": [\r\n      {\r\n        \"type\": \"header\",\r\n        \"parameters\": [\r\n          {\r\n            \"type\": \"image\",\r\n            \"image\": {\r\n              \"link\": \"{public media url]\"\r\n            }\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"type\": \"body\",\r\n        \"parameters\": [\r\n          {\r\n            \"type\": \"text\",\r\n            \"text\": \"{placeholder data}\"\r\n          }\r\n        ]\r\n      }\r\n    ]\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}messages",
+							"host": [
+								"{{api_url}}messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send Message with Quick Reply Button Template",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"to\": \"{mobile number}\",\r\n  \"type\": \"template\",\r\n  \"template\": {\r\n    \"language\": {\r\n      \"policy\": \"deterministic\",\r\n      \"code\": \"{lang_code}\"\r\n    },\r\n    \"name\": \"{template name}\",\r\n    \"components\": [             //This is used to define run-time data for placeholder variables and interactive buttons etc. for different type components. \r\n      {\r\n        \"type\": \"body\",    //Use body\r\n        \"parameters\": [    //Each Object in the array to carry value for placeholder variables. Objects are to be placed in the same order as they represent related placeholder in the Template.\r\n          {\r\n            \"type\": \"text\",    //Use text\r\n            \"text\": \"{placeholder data}\"   //Value for the placeholder\r\n          }\r\n        ]\r\n      }\r\n    ]\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}messages",
+							"host": [
+								"{{api_url}}messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send Message with Call to Action Button Template",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"to\": \"99XXXXXXXXXX\",\r\n    \"type\": \"template\",\r\n    \"template\": {\r\n        \"language\": {\r\n            \"policy\": \"deterministic\",\r\n            \"code\": \"{language}\"\r\n        },\r\n        \"name\": \"{name of template}\",\r\n        \"components\": [\r\n            {\r\n                \"type\": \"body\", //Use body\r\n                \r\n                \"parameters\": [ //Each Object in the array to carry value for placeholder variables. Objects are to be placed in the same order as they represent related placeholder in the Template.\r\n                    {\r\n                        \"type\": \"text\", //Use text\r\n                        \"text\": \"{text}\" //Value for the placeholder\r\n                    }\r\n    \r\n                ]\r\n            },\r\n            {\r\n                \"type\": \"button\", //Use button\r\n                \"sub_type\": \"url\", //Use url\r\n                \"index\": \"{index}\",\r\n                //Order number of the button. Index number starts with 0 for the first button.\r\n                \"parameters\": [ //It appears if any URL has placeholder variable. Object in the array to carry definition of placeholder data\r\n                    {\r\n                        \"type\": \"text\", //Use text\r\n                        \"text\": \"{text}\"\r\n                        //Part of URL to be used as data for placeholder variable\r\n                    }\r\n                ]\r\n            }\r\n        ]\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}messages",
+							"host": [
+								"{{api_url}}messages"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Send Message without Template",
+			"item": [
+				{
+					"name": "Send Message with Text Content",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"to\": \"{mobile number}\",       //Recipient Phone No. Format: +6599999999 (65 is the Country Code, 99999999 is Phone No.)\r\n  \"type\": \"text\",               //Use text\r\n  \"recipient_type\": \"individual\",       //Use individual\r\n  \"text\": {                     //Object for text contents\r\n    \"body\": \"{body text content}\"         //Body content for the message\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}messages",
+							"host": [
+								"{{api_url}}messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Business API – Messaging Search for:  WhatsApp Business API      Overview     Release Notes     Access Token     Message Templates     Messaging  Webhook      Overview     Incoming Messages     Actions & Reactions     Delivery Notifications     Template N",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"to\": \"{mobile number}\",\r\n  \"type\": \"image\",           //Enumerated values: image, video, audio, document, sticker. Use one.\r\n  \"image\": {                 //Use image, video, document, audio or sticker. Use one.\r\n    \"caption\": \"{caption}\",  //Caption for the media file. Not used with audio.\r\n    \"link\": \"{public image url}\"    //Publicly accessible https hosted URL for the media file\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}messages",
+							"host": [
+								"{{api_url}}messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send Message with Location",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"to\": \"{mobile number}\",\r\n  \"type\": \"location\",          //Use location\r\n  \"location\": {                //Object contains location content\r\n    \"longitude\": \"{longitude}\",           //Location’s Longitude\r\n    \"latitude\": \"{latitude}\",             //Location’s Latitude \r\n    \"name\": \"{location name}\",            //Name of the Location\r\n    \"address\": \"{location address}\"       //Address of the Location\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}messages",
+							"host": [
+								"{{api_url}}messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send Message with Contact",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"to\": \"{mobile number}\",\r\n    \"type\": \"contacts\",       //Use contacts\r\n    \"contacts\": {             //This object appears with type:contact. It contains location information\r\n        \"addresses\": [        //Array of objects. Each Object is Address \r\n            {\r\n                \"city\": \"{contact city}\",\r\n                \"country\": \"{contact country}\",\r\n                \"country_code\": \"{contact country code}\",\r\n                \"state\": \"{contact state}\",\r\n                \"street\": \"{contact street}\",\r\n                \"type\": \"{home or work}\",\r\n                \"zip\": \"{contact zip}\"\r\n            }\r\n        ],\r\n        \"birthday\": \"{contact birthday}\",   //Date of Birth\r\n        \"emails\": [             //Array of Objects. Each Object is an Email Address \r\n            {\r\n                \"email\": \"{contact email}\",\r\n                \"type\": \"{work or home}\"\r\n            }\r\n        ],\r\n        \"name\": {             //Name. It breaks down name into parts defined as keys\r\n            \"formatted_name\": \"{contact formatted name}\",\r\n            \"first_name\": \"{contact first name}\",\r\n            \"last_name\": \"{contact last name}\",\r\n            \"middle_name\": \"{contact middle name}\",\r\n            \"suffix\": \"{contact suffix}\",\r\n            \"prefix\": \"{contact prefix}\"\r\n        },\r\n        \"org\": {            //Organization\r\n            \"company\": \"{contact org company}\",\r\n            \"department\": \"{contact org department}\",\r\n            \"title\": \"{contact org title}\"\r\n        },\r\n        \"phones\": [          //Array of Objects. Each Object is a Phone Number\r\n            {\r\n                \"phone\": \"{contact phone}\",\r\n                \"wa_id\": \"{contact wa id}\",\r\n                \"type\": \"{home or work}\"\r\n            }\r\n        ],\r\n        \"urls\": [          //URL of different type/category\r\n            {\r\n                \"url\": \"{contact url}\",\r\n                \"type\": \"{home or work}\"\r\n            }\r\n        ]\r\n    }\r\n\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}messages",
+							"host": [
+								"{{api_url}}messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send Message with Interactive Buttons",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"to\": \"{mobile number}\",\r\n    \"recipient_type\": \"individual\",\r\n    \"type\": \"interactive\",           //Use interactive\r\n    \"interactive\": {                 //This object appears with type:interactive. It contains interactive button and content information\r\n        \"type\": \"button\",       //Use button\r\n        \"body\": {               //Body Object\r\n            \"text\": \"{body text}\"       //Text of the Body\r\n        },\r\n        \"action\": {                //Object contains Quick Reply Buttons\r\n            \"buttons\": [           //It contains one or more button defintions\r\n                {\r\n                    \"type\": \"reply\",    //Use reply\r\n                    \"reply\": {          //Define Quick Reply Button\r\n                        \"id\": \"{unique button id}\",       //Give an ID to your buttons. ID should be unique for each button. This ID is returned on clicking of the button. You are suggested to use increasing numbers to use as ID.\r\n                        \"title\": \"{button title}\"       //Label of the button.\r\n                    }\r\n                },\r\n                {\r\n                    \"type\": \"reply\",\r\n                    \"reply\": {\r\n                        \"id\": \"{unique button id}\",\r\n                        \"title\": \"{button title}\"\r\n                    }\r\n                }\r\n            ]\r\n        }\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}messages",
+							"host": [
+								"{{api_url}}messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send Message with Interactive List",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"to\": \"{mobile number}\",\r\n  \"recipient_type\": \"individual\",\r\n  \"type\": \"interactive\",\r\n  \"interactive\": {\r\n    \"type\": \"list\",          //Use list\r\n    \"header\": {              //Header Object\r\n      \"type\": \"text\",\r\n      \"text\": \"{header text}\"\r\n    },\r\n    \"body\": {               //Body Object\r\n      \"text\": \"{body text}\"\r\n    },\r\n    \"footer\": {             //Footer Object\r\n      \"text\": \"{footer text}\"\r\n    },\r\n    \"action\": {             //Object contains List Items\r\n      \"button\": \"{action button text}\",      //Label for the Action Button to open the List\r\n      \"sections\": [        //Array of Objects. Each Object defines a Section (Category) and each List Item under it.\r\n        {\r\n          \"title\": \"{section title}\",   //Section Title. This helps to categorize your listed items\r\n          \"rows\": [          //It defines each listed item in the section in form of an object\r\n            {\r\n              \"id\": \"{unique id for list item}\",        //Give an ID to your listed item. ID should be unique for each item. This ID is returned on clicking of the item. You are suggested to use increasing numbers to use as ID.\r\n              \"title\": \"{list item title}\",       //Title for the listed item\r\n              \"description\": \"{list item description}\"        //Description for the listed item\r\n            }\r\n          ]\r\n        },\r\n        {\r\n          \"title\": \"{section title}\",\r\n          \"rows\": [\r\n            {\r\n              \"id\": \"{unique id for list item}\",\r\n              \"title\": \"{list item title}\",\r\n              \"description\": \"{list item description}\"\r\n            },\r\n            {\r\n              \"id\": \"{unique id for list item}\",\r\n              \"title\": \"{list item title}\",\r\n              \"description\": \"{list item description}\"\r\n            }\r\n          ]\r\n        }\r\n      ]\r\n    }\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}messages",
+							"host": [
+								"{{api_url}}messages"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Create Token",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"app_id\": \"String\",    //App ID sent to your email when you create SMS project\r\n  \"app_key\": \"String\"    ////App Key sent to your email when you create SMS project\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_url}}token",
+					"host": [
+						"{{api_url}}token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Template with Text Contents with Header",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"{template name}\",    //Unique template name and in small letters only.\r\n  \"category\": \"{template category}\",    //Use one of the available categories\r\n  \"language\": \"{lang code}\",    //Use one given in the Language Code List like en_us\r\n  \"components\": [\r\n    {\r\n      \"type\": \"HEADER\",    //Use HEADER\r\n      \"format\": \"TEXT\",    //Use TEXT\r\n      \"text\": \"{header text]\"     //Use Header Text Content\r\n    },\r\n    {\r\n        \r\n      \"type\": \"BODY\",   //It defines a textual body content\r\n      \"text\": \"Hello {{1}}, this is a template with header and footer text.\",   //Text Contents. May have {{placeholder}} variables numbered by instances as {{1}}, ((2)) and so on.\r\n      \"example\": {    //Data Example for each Placeholder variable in the same order they appear in body.text. Its required if placeholders are used in body.text\r\n        \"body_text\": [\r\n          [\r\n            \"John\"\r\n          ]\r\n        ]\r\n      }\r\n    },\r\n    {\r\n      \"type\": \"FOOTER\",   //It defines a textual footer content \r\n      \"text\": \"{footer text]\"     //Text Contents. May have {{placeholder}} variables numbered by instances as {{1}}, ((2)) and so on. \r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_url}}templates",
+					"host": [
+						"{{api_url}}templates"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Template with Basic Text Contents",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"{template name}\",    //Unique template name and in small letters only.\r\n  \"category\": \"{template category}\",    //Use one of the available categories\r\n  \"language\": \"{lang code}\",    //Use one given in the Language Code List like en_us\r\n  \"components\": [\r\n    {\r\n      \"type\": \"BODY\",   //It defines a textual body content\r\n      \"text\": \"Hello {{1}}, this is a template with header and footer text.\",   //Text Contents. May have {{placeholder}} variables numbered by instances as {{1}}, ((2)) and so on.\r\n      \"example\": {    //Data Example for each Placeholder variable in the same order they appear in body.text. Its required if placeholders are used in body.text\r\n        \"body_text\": [\r\n          [\r\n            \"John\"\r\n          ]\r\n        ]\r\n      }\r\n    },\r\n    {\r\n      \"type\": \"FOOTER\",   //It defines a textual footer content \r\n      \"text\": \"{footer text]\"     //Text Contents. May have {{placeholder}} variables numbered by instances as {{1}}, ((2)) and so on. \r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_url}}templates",
+					"host": [
+						"{{api_url}}templates"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Template with Rich Media Contents",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"{template name}\",\r\n  \"category\": \"{template category}\",\r\n  \"language\": \"{lang code}\",\r\n  \"components\": [\r\n    {\r\n      \"type\": \"HEADER\",        //Use HEADER\r\n      \"format\": \"IMAGE/VIDEO/DOCUMENT\",      //ype of Rich Media. Use either IMAGE, VIDEO or DOCUMENT as String for Rich Media Content.\r\n      \"example\": {          //Media Example. Use publicly accessible related media content URL over https. Rich media must comply with the specification.\r\n        \"header_handle\": [\r\n          {sample media url}   //One or more Public URL for the Media File\r\n        ]\r\n      }\r\n    },\r\n    {\r\n      \"type\": \"BODY\",\r\n      \"text\": \"Your physics course {{1}}, is now available in preview?\",\r\n      \"example\": {\r\n        \"body_text\": [\r\n          [\r\n            \"Gravity\"\r\n          ]\r\n        ]\r\n      }\r\n    },\r\n    {\r\n      \"type\": \"FOOTER\",\r\n      \"text\": \"{footer text}\"\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_url}}templates",
+					"host": [
+						"{{api_url}}templates"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Interactive Template with Quick Reply Buttons",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"{template name}\",\r\n  \"category\": \"{template category}\",\r\n  \"language\": \"{lang code}\",\r\n  \"components\": [\r\n    {\r\n      \"type\": \"BODY\",\r\n      \"text\": \"Hello dear Mr. {{1}}, would you like to renew your membership?\",\r\n      \"example\": {\r\n        \"body_text\": [\r\n          [\r\n            \"John\"\r\n          ]\r\n        ]\r\n      }\r\n    },\r\n    {\r\n      \"type\": \"BUTTONS\",    //Use BUTTONS\r\n      \"buttons\": [          //It defines one or more quick reply button. Each object in is a button definition \r\n        {\r\n          \"type\": \"QUICK_REPLY\",     //Type of button. Use QUICK_REPLY\r\n          \"text\": \"{button label}\"   //Label for the Button\r\n        },\r\n        {\r\n          \"type\": \"QUICK_REPLY\",\r\n          \"text\": \"{button label}\"\r\n        }\r\n      ]\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_url}}templates",
+					"host": [
+						"{{api_url}}templates"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Interactive Template with Call-to-Action Buttons",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"{template name}\",\r\n  \"category\": \"{template category}\",\r\n  \"language\": \"{lang code}\",\r\n  \"components\": [\r\n    {\r\n      \"type\": \"BODY\",\r\n      \"text\": \"Hello dear Mr. {{1}}, would you like to renew your membership?\",\r\n      \"example\": {\r\n        \"body_text\": [\r\n          [\r\n            \"John\"\r\n          ]\r\n        ]\r\n      }\r\n    },\r\n    {\r\n      \"type\": \"BUTTONS\",     //Use BUTTONS\r\n      \"buttons\": [          //It defines one or more quick reply button. Each object in is a button definition \r\n        {\r\n          \"type\": \"PHONE_NUMBER\",       //Use PHONE_NUMBER\r\n          \"text\": \"{button label}\",     //Label for the button\r\n          \"phone_number\": \"{phone number}\"     //Phone number to to dial on click of the the button. Use with Country Code (Without leading + or 00)\r\n        },\r\n        {\r\n          \"type\": \"URL\",     //Use URL\r\n          \"text\": \"{button label}\",   //Label for the Button\r\n          \"url\": \"{url with placeholder i.e. https://yoursite.com/{{1}} }\",    //URL. Placeholder may be used for whole URL or to cover part of it\r\n          \"example\": [\r\n            \"{example url}\"    //Required if placeholder is used in URL. One or may “Strings” may be used separated by Comma.\r\n          ]\r\n        }\r\n      ]\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_url}}templates",
+					"host": [
+						"{{api_url}}templates"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get List of Templates",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api_url}}templates",
+					"host": [
+						"{{api_url}}templates"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get List of Approved Templates",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api_url}}templates?status=APPROVED",
+					"host": [
+						"{{api_url}}templates"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "APPROVED"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete template",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{api_url}}templates/template_name",
+					"host": [
+						"{{api_url}}templates"
+					],
+					"path": [
+						"template_name"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Mark Incoming Message as Read",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"messageId\": \"{message id}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_url}}messages/read",
+					"host": [
+						"{{api_url}}messages"
+					],
+					"path": [
+						"read"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Send Message",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"to\": \"{{recipient_number}}\", //Required -    Recipient Phone No. Format: +6599999999 (65 is the Country Code, 99999999 is Phone No.) \n    \"type\": \"text\", //Required\n    \"text\": {\n        \"body\": \"{{message_body}}\" //Body content for the message\n    }\n}"
+				},
+				"url": {
+					"raw": "{{api_url}}messages",
+					"host": [
+						"{{api_url}}messages"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Message Status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api_url}}messages/{{message_id}}",
+					"host": [
+						"{{api_url}}messages"
+					],
+					"path": [
+						"{{message_id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "{{app_key}}",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "{{app_id}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "app_id",
+			"value": "your app_id",
+			"type": "string"
+		},
+		{
+			"key": "app_key",
+			"value": "your app_key",
+			"type": "string"
+		},
+		{
+			"key": "api_url",
+			"value": "https://api.enablex.io/whatsapp/v1/",
+			"type": "string"
+		}
+	]
+}

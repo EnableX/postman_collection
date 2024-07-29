@@ -1,0 +1,605 @@
+{
+	"info": {
+		"_postman_id": "a3fed205-79ea-44f3-b269-3fe78ee2ab84",
+		"name": "EnableX RCS API",
+		"description": "Collection for EnableX RCS Programmable API\n\n## Rich Business Messaging (RBM)\n\n**Rich Business Messaging (RBM)** is a communication between users and Brands, via mobile-telephone carriers, aiming at replacing SMS messages with a text-message system that is richer, provides phonebook polling (for service discovery), and transmit multimedia and action links.\n\n## Rich Communication Services (RCS)\n\n**Rich Communication Services (RCS)** is the communication protocol on RBM. RCS APIs can be integrated with numerous backend systems, such as CRM and marketing platforms.\n\nCommunication between business and customer/users over RBM ( is carried out through messaging i.e. sending and receives messages. The RBM framework helps to effectively manage the processes around messaging through the following:\n\n- **API**: Its a Rest API Service with many API Collections/Routes used to initiate related transactions.\n    \n- **Webhook**: It’s a Webhook over https to receive incoming messages, delivery notifications, status updates etc.\n    \n\n# RCS API Authentication\n\nRCS API are always used for Server to Server Call. EnableX provides 2 different type of authentication mechanism for API Calls, they are:\n\n- HTTP Basic Authentication\n    \n- Bearer Token\n    \n\nEither of these mechanism can be used to access RCS API as per your application requirement.\n\n### HTTP Basic Authentication\n\nThe RCS API uses HTTP Basic Authentication mechanism to authenticate API calls. Each API call is validated via the authentication header.\n\nEach EnableX RCS Project is assigned with Access Credentials in the form of APP ID and APP Key. These are to be used for HTTP Basic Authentication as explained below:\n\n**Authorization Header**\n\n- **APP ID**: It is used as username.\n    \n- **APP KEY**: It is used as password.\n    \n- Create **base64 encoding** for String **APP ID:APP KEY**. This encoded string is used in the Authorization header. Note that there is a colon (:) to separate APP ID and APP KEY in the string to encode\n    \n\n**Sample API Call Example**: Using HTTP Basic Authentication\n\n<img src=\"https://content.pstmn.io/0c667eeb-00d5-4a48-998e-73a60b091266/aW1hZ2UucG5n\" alt=\"Authentication%20Using%20AppId%20&amp;%20Appkey\" width=\"549\" height=\"148\">\n\n### Bearer Token\n\nRCS API works on a Bearer Token with a validity of 60 minutes. Using the Token, any number of API call can be made before it expires.\n\nUsing the [Token API](https://developer.enablex.io/docs/references/apis/rcs-api/content/api-routes/token-api/index/), a token can be created or re-created if the previous one has expired. The Token API returns an Expiry Time too. This helps you to re-create another token before it expires. If API call is made using an expired token, error is returned.\n\n**Sample API Call Example**: Using Bearer Token\n\n<img src=\"https://content.pstmn.io/e5b67512-ab62-4ef6-a31d-32e28458aec8/aW1hZ2UucG5n\" width=\"1552\" height=\"346\">\n\n### How to get APP_ID & APP_KEY\n\nAll API Credentials are paired to a Project. You will need to create a Project first to receive the API credentials. To create Project, follow the given steps:\n\n- Login to [EnableX Portal](https://portal.enablex.io)\n    \n- **Navigate**: {Main Menu} Projects / My Projects\n    \n- **Click**: Project Name – to reach Project Dashboard. Access Credentials for the Project can be found here.\n    \n\n## API Reference\n\nYou can refer to the detailed [API reference](https://www.enablex.io/developer/sms/sms-api/) to understand better about the request/response structure, request arguments, response variables, webhooks, etc.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10735955",
+		"_collection_link": "https://enablexteam.postman.co/workspace/EnableX_Team-Workspace~12cd1290-2290-49be-937a-0e80ebd42368/collection/32093347-a3fed205-79ea-44f3-b269-3fe78ee2ab84?action=share&source=collection_link&creator=10735955"
+	},
+	"item": [
+		{
+			"name": "Get Bearer Token",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"app_id\": \"<app-id>\",\r\n    \"app_key\": \"<app-key>\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_url}}token",
+					"host": [
+						"{{api_url}}token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Templates - Get by Name",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api_url}}templates/<template-name>",
+					"host": [
+						"{{api_url}}templates"
+					],
+					"path": [
+						"<template-name>"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Template - Create - Text",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n        \"name\": \"<template-name>\",\r\n        \"type\": \"text\",\r\n        \"templateDetails\": {\r\n            \"agent\": \"<agent>\",\r\n            \"variables\": [\r\n                \"username\" // example\r\n            ],\r\n            \"category\": \"text\",\r\n            \"payload\": {}\r\n        },\r\n        \"text\": \"hi [username], this is a test template\", // example\r\n        \"suggestions\": [\r\n            {\r\n                \"displayText\": \"Yes\", // example\r\n                \"postback\": \"No\",\r\n                \"suggestionType\": \"reply\"\r\n            }\r\n        ]\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_url}}templates",
+					"host": [
+						"{{api_url}}templates"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Template - Create - Text - Suggestion Dialer Action",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n        \"name\": \"<template-name>\",\r\n        \"type\": \"text\",\r\n        \"templateDetails\": {\r\n            \"agent\": \"<agent>\",\r\n            \"variables\": [\r\n                \"username\"\r\n            ],\r\n            \"category\": \"text\",\r\n            \"payload\": {}\r\n        },\r\n        \"text\": \"hi [username], this is a test template\",\r\n        \"suggestions\": [\r\n            {\r\n                \"displayText\": \"call-us\",\r\n                \"postback\": \"call\",\r\n                \"suggestionType\": \"dialer_action\",\r\n                \"phone\": \"+91XXXXXXXXXX\"\r\n            }\r\n        ]\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_url}}templates",
+					"host": [
+						"{{api_url}}templates"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Template - Create - Text - Suggestion Reply Text",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n        \"name\": \"<template-name>\",\r\n        \"type\": \"text\",\r\n        \"templateDetails\": {\r\n            \"agent\": \"<agent>\",\r\n            \"variables\": [\r\n                \"username\"\r\n            ],\r\n            \"category\": \"text\",\r\n            \"payload\": {}\r\n        },\r\n        \"text\": \"hi [username], this is a test template\",\r\n        \"suggestions\": [\r\n            {\r\n                \"displayText\": \"Yes\",\r\n                \"postback\": \"No\",\r\n                \"suggestionType\": \"reply\"\r\n            }\r\n        ]\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_url}}templates",
+					"host": [
+						"{{api_url}}templates"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Template - Create - Text - Suggestion URL",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n        \"name\": \"<template-name>\",\r\n        \"type\": \"text\",\r\n        \"templateDetails\": {\r\n            \"agent\": \"<agent>\",\r\n            \"variables\": [\r\n                \"username\" // example\r\n            ],\r\n            \"category\": \"text\",\r\n            \"payload\": {}\r\n        },\r\n        \"text\": \"hi [username], this is a test template\",\r\n        \"suggestions\": [\r\n            {\r\n                \"displayText\": \"open the url\", // example\r\n                \"postback\": \"clicked\",\r\n                \"suggestionType\": \"url_action\",\r\n                \"url\": \"<URL to open>\"\r\n            }\r\n        ]\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_url}}templates",
+					"host": [
+						"{{api_url}}templates"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Template - Create - Text - Suggestion Location",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n        \"name\": \"<template-name>\",\r\n        \"type\": \"text\",\r\n        \"templateDetails\": {\r\n            \"agent\": \"<agent>\",\r\n            \"variables\": [\r\n                \"username\"\r\n            ],\r\n            \"category\": \"text\",\r\n            \"payload\": {}\r\n        },\r\n        \"text\": \"hi [username], this is a test template\",\r\n        \"suggestions\": [\r\n            {\r\n                \"displayText\": \"Locate us\",\r\n                \"postback\": \"location checked\",\r\n                \"suggestionType\": \"view_location_latlong\",\r\n                \"latitude\": \"<latitude value>\",\r\n                \"longitude\": \"<longitude value>\",\r\n                \"label\":\"<label e.g. city>\"\r\n            }\r\n        ]\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_url}}templates/",
+					"host": [
+						"{{api_url}}templates"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Template - Create - Rich Card",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"<template-name>\",\r\n    \"type\": \"card\",\r\n    \"orientation\": \"VERTICAL\",\r\n    \"height\": \"SHORT\",\r\n    \"card\": {\r\n        \"title\": \"Introducing new logo\",\r\n        \"description\": \"Introducing new logo, hope you find it cool!!\",\r\n        \"url\": \"<public-url-of-image>\",\r\n        \"suggestions\": [{\r\n            \"suggestionType\": \"reply\",\r\n            \"displayText\": \"Like\",\r\n            \"postback\": \"liked\"\r\n        },\r\n        {\r\n            \"suggestionType\": \"reply\",\r\n            \"displayText\": \"Dislike\",\r\n            \"postback\": \"disliked\"\r\n        }]        \r\n    },\r\n    \"templateDetails\": {\r\n      \"agent\": \"<agent>\",\r\n      \"variables\": [],\r\n      \"category\": \"card\",\r\n      \"payload\": {}\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_url}}templates/",
+					"host": [
+						"{{api_url}}templates"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Template - Create - Carousel",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"<template-name>\",\r\n    \"type\": \"carousel\",\r\n    \"width\": \"SMALL\",\r\n    \"height\": \"SHORT\",\r\n    \"carousel\": [{\r\n        \"title\": \"<title-card-1>\",\r\n        \"description\": \"<description-card-1>\",\r\n        \"url\": \"<public-url-of-image-1>\",\r\n        \"suggestions\": [{\r\n            \"suggestionType\": \"reply\",\r\n            \"displayText\": \"Like\",\r\n            \"postback\": \"liked\"\r\n        },\r\n        {\r\n            \"suggestionType\": \"reply\",\r\n            \"displayText\": \"Dislike\",\r\n            \"postback\": \"disliked\"\r\n        }]        \r\n    },\r\n    {\r\n        \"title\": \"<title-card-2>\",\r\n        \"description\": \"<description-card-2>\",\r\n        \"url\": \"<public-url-of-image-2>\",\r\n        \"suggestions\": [{\r\n            \"suggestionType\": \"reply\",\r\n            \"displayText\": \"Like\",\r\n            \"postback\": \"liked\"\r\n        },\r\n        {\r\n            \"suggestionType\": \"reply\",\r\n            \"displayText\": \"Dislike\",\r\n            \"postback\": \"disliked\"\r\n        }]        \r\n    }],\r\n    \"templateDetails\": {\r\n      \"agent\": \"<agent>\",\r\n      \"variables\": [],\r\n      \"category\": \"carousel\",\r\n      \"payload\": {}\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_url}}templates/",
+					"host": [
+						"{{api_url}}templates"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Template - Update - Text",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"type\": \"text\",\r\n    \"templateDetails\": {\r\n        \"agent\": \"<agent>\",\r\n        \"variables\": [\r\n            \"username\"\r\n        ],\r\n        \"category\": \"text\",\r\n        \"payload\": {}\r\n    },\r\n    \"text\": \"<updated-message>\",\r\n    \"suggestions\": [\r\n        {\r\n            \"displayText\": \"Yes\",\r\n            \"postback\": \"yes\",\r\n            \"suggestionType\": \"reply\"\r\n        },\r\n        {\r\n            \"displayText\": \"No\",\r\n            \"postback\": \"no\",\r\n            \"suggestionType\": \"reply\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_url}}templates/<template-name>",
+					"host": [
+						"{{api_url}}templates"
+					],
+					"path": [
+						"<template-name>"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Templates - Get All",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api_url}}templates",
+					"host": [
+						"{{api_url}}templates"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Templates - Delete by Name",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{api_url}}templates/<template-name>",
+					"host": [
+						"{{api_url}}templates"
+					],
+					"path": [
+						"<template-name>"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Message - Send - Text - Suggestion Text",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "<token>",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"phone\": \"+91XXXXXXXXXX\",\r\n    \"type\": \"text\",\r\n    \"agent\": \"<agent>\",\r\n    \"text\": \"Hi, congratulations on signup! Login creds sent over registered email.\",\r\n    \"suggestions\": [\r\n        {\r\n            \"type\": \"message\",\r\n            \"text\": \"Okay\",\r\n            \"postback\": \"ok\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_url}}messages",
+					"host": [
+						"{{api_url}}messages"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Message - Send - Text - Suggestion Dialer Action",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "<token>",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"phone\": \"+91XXXXXXXXXX\",\r\n    \"type\": \"text\",\r\n    \"agent\": \"<agent>\",\r\n    \"text\": \"Hi, congratulations on signup! Login creds sent over registered email.\",\r\n    \"suggestions\": [\r\n        {\r\n            \"displayText\": \"call-us\",\r\n            \"postback\": \"call\",\r\n            \"suggestionType\": \"dialer_action\",\r\n            \"phone\": \"+91XXXXXXXXXX\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_url}}messages",
+					"host": [
+						"{{api_url}}messages"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Message - Send - Rich Card - Suggestion Text",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "<token>",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"phone\": \"+91XXXXXXXXXX\",\r\n    \"type\": \"card\",\r\n    \"agent\": \"<agent>\",\r\n    \"card\": {\r\n\t\t\"title\": \"{Plain Text}\",\r\n\t\t\"description\": \"{Plain Text}\",\r\n\t\t\"url\": \"{https url of media file}\",\r\n\t\t\"thumbnail_url\": \"{https url of media file}\",\r\n\t\t\"suggestions\": [\r\n\t\t\t{\r\n                \"type\": \"message\",\r\n                \"text\": \"Okay\", // example\r\n                \"postback\": \"ok\"  // example\r\n            }\r\n\t\t]\r\n\t}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_url}}messages",
+					"host": [
+						"{{api_url}}messages"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Message - Send - Carousel - Suggestion Text",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "<token>",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"phone\": \"+91XXXXXXXXXX\",\r\n    \"type\": \"card\",\r\n    \"agent\": \"<agent>\",\r\n    \"carousel\": [\r\n        {\r\n            \"title\": \"{Plain Text}\",\r\n            \"description\": \"{Plain Text}\",\r\n            \"url\": \"{https url of media file}\",\r\n            \"thumbnail_url\": \"{https url of media file}\",\r\n            \"suggestions\": [\r\n                {\r\n                    \"type\": \"message\",\r\n                    \"text\": \"Okay\", // example\r\n                    \"postback\": \"ok\"  // example\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_url}}messages",
+					"host": [
+						"{{api_url}}messages"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Message - Send - Template",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"phone\": \"+91XXXXXXXXXX\",\r\n    \"type\": \"template\",\r\n    \"agent\": \"<agent>\",\r\n    \"template\": {\r\n        \"name\": \"<template-name>\",\r\n        \"variables\": {\r\n            \"username\": \"<value>\"\r\n        }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_url}}messages/templates",
+					"host": [
+						"{{api_url}}messages"
+					],
+					"path": [
+						"templates"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Message - Mark Read",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "<token>",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"request_id\": \"<request-id>\",\r\n\t\"phone\": \"+91XXXXXXXXXX\",\r\n\t\"agent\": \"<agent>\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_url}}messages/read",
+					"host": [
+						"{{api_url}}messages"
+					],
+					"path": [
+						"read"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Message - Revoke",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"phone\": \"+91XXXXXXXXXX\",\r\n\t\"agent\": \"<agent>\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_url}}messages/revoke/<message-id>",
+					"host": [
+						"{{api_url}}messages"
+					],
+					"path": [
+						"revoke",
+						"<message-id>"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Message - Typing Indicator",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"phone\": \"+91XXXXXXXXXX\",\r\n    \"agent\": \"<agent>\",\r\n    \"session_id\": \"<session-id>\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_url}}indicators/typing",
+					"host": [
+						"{{api_url}}indicators"
+					],
+					"path": [
+						"typing"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Testers - Get All",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api_url}}testers",
+					"host": [
+						"{{api_url}}testers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Testers - Add a tester",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"phone\": \"+91XXXXXXXXXX\",\r\n    \"agent\": \"<agent>\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_url}}testers",
+					"host": [
+						"{{api_url}}testers"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "api_url",
+			"value": "https://api.enablex.io/rcs/v1/",
+			"type": "string"
+		},
+		{
+			"key": "app_id",
+			"value": "<app_id>",
+			"type": "string"
+		},
+		{
+			"key": "app_key",
+			"value": "<app_key>",
+			"type": "string"
+		}
+	]
+}

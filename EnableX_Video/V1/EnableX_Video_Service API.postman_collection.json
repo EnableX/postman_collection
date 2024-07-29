@@ -1,0 +1,449 @@
+{
+	"info": {
+		"_postman_id": "dd7c69da-d781-490b-976e-d4e9f09f236d",
+		"name": "EnableX Video Service API",
+		"description": "Collection for EnableX Video Service Programmable API routes\n\n## **Video Service API**\n\nThe Server API is a REST API Service used for provisioning and reporting requirements of your Application. The API Service is also required for managing Rooms, requesting token and to obtain usage reports post RTC session.\n\n## API Authentication\n\nThe Video Server API uses HTTP Basic Authentication mechanism to authenticate API calls. Each API call is validated via the authentication header.\n\nThe following Information is used as credentials to access Video Server API for your Application in the HTTP basic authentication header in the API call request\n\n- **Application ID** or **APP_ID** as _Username_\n    \n- **Application Key** or **APP_KEY** as _Password_\n    \n\n```\nPOST https://api.enablex.io/video/v1/\nAuthorization: Basic XXXXXXX\nContent-Type: application/json\n\n ```\n\nThe Authorization header in the above example contains a value XXXXX which is a base64 encoded string of the APP_ID:APP_KEY.\n\n### How to get APP_ID & APP_KEY\n\nAll API Credentials are paired to a Project. You will need to create a Project first to receive the API credentials. To create Project, follow the given steps:\n\n- Login to [EnableX Portal](https://portal.enablex.io)\n    \n- **Navigate**: {Main Menu} Projects / My Projects\n    \n- **Click**: Project Name – to reach Project Dashboard. Access Credentials for the Project can be found here.\n    \n\n## API Reference\n\nYou can refer to the detailed [API reference](https://www.enablex.io/developer/video-api/server-api/) to understand better about the request/response structure, request arguments, response variables, webhooks, etc.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10735955",
+		"_collection_link": "https://enablexteam.postman.co/workspace/EnableX_Team-Workspace~12cd1290-2290-49be-937a-0e80ebd42368/collection/10735955-dd7c69da-d781-490b-976e-d4e9f09f236d?action=share&source=collection_link&creator=10735955"
+	},
+	"item": [
+		{
+			"name": "Room Management",
+			"item": [
+				{
+					"name": "Create Room",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseData = pm.response.json();",
+									"",
+									"//setting room_id as enviroment variable to use it in further requests",
+									"pm.collectionVariables.set(\"room_id\", responseData.room.room_id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Room Name\",        //Name of Room or Topic of Meeting. Can be Alpha Numeric\n    \"owner_ref\": \"Owner Reference\",      //Room Owner ID of Reference. You may use it from your Information System. Post Call Reports include this data for your reference/reporting.\n    \"settings\": {              //JSON Object with room Configuration Keys. Value of each Key within settings will be validated to have legit value. \n        \"description\": \"Room description\",\n        \"mode\": \"group\",        //Type of Room. Not editable. Can be group or lecture. Lecture mode auto-implements restriction on stream publishing by Participants and Moderator gets exclusive control of the floor.\n        \"scheduled\": false,     //Whether the room is a permanent room or scheduled for a specific duration. Setting it false creates a permanent room.\n        \"adhoc\": false,         //Whether the room is an Adhoc room. An adhoc room by default can only be used only for one session. . To create an Adhoc room, you need to set it to true along with settings.scheduled as false.\n        \"duration\": 50,     //Total duration of single Video Session in the room. Its in minutes. Video Session can be extended using SDK Method call being within a session. If duration is defined with an Adhoc Room, the room is made available for multiple sessions until N minutes as defined in duration from its initial session. e.g. If an Adhoc room is defined for 60 minutes, and if its used at 1PM for first session, it will be made available until 2PM for any new session.\n        \"moderators\": 1,       //Total Number of Moderator(s) allowed in the Room. If omitted, 1 moderator is set by default.\n        \"participants\": 10,    //Total Number of Participants allowed in the Room. This value doesn’t count the Moderator.\n        \"quality\": \"HD\",      //If your application setting and subscription allows HD streaming, you may opt to use either HD, SD or LD for a room. If not used, EnableX allows subscription based stream quality by default.\n        \"auto_recording\": false,     //If auto-recording is enabled, recordings gets started as soon as any participant publishes into the room. In Auto-Recording enabled sessions, Recording can be stopped and restarted manually using function calls. \n        \"screen_share\": true,     //If you need Screen Share in a room, you may enable it.\n        \"canvas\": false,          //If you need Canvas streaming (Streaming with contents of HTML5 Canvas Object) in a room, you may enable it. \n        \"max_active_talkers\": 6   //ou may define how many maximum streams you need in Active Talkers. Optional. Maximum 16 Active Talkers may be define. \n    }\n}"
+						},
+						"url": {
+							"raw": "{{api_url}}rooms",
+							"host": [
+								"{{api_url}}rooms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Room Information",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}rooms/{{room_id}}",
+							"host": [
+								"{{api_url}}rooms"
+							],
+							"path": [
+								"{{room_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a list of Rooms",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}rooms/",
+							"host": [
+								"{{api_url}}rooms"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Room Information",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n      \"name\": \"Topic or Room Title\",\n      \"settings\": {\n          \"participants\": \"15\",\n          \"auto_recording\": true \n      }            \n }"
+						},
+						"url": {
+							"raw": "{{api_url}}rooms/{{room_id}}",
+							"host": [
+								"{{api_url}}rooms"
+							],
+							"path": [
+								"{{room_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a Room",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//deleting the Environment Variable",
+									"pm.collectionVariables.unset(\"room_id\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}rooms/{{room_id}}",
+							"host": [
+								"{{api_url}}rooms"
+							],
+							"path": [
+								"{{room_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Media Session",
+			"item": [
+				{
+					"name": "Create Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"User Name\",       //Name of the user who is creating token to join session\n    \"role\": \"participant\",     //role Role of Use. moderator, participant, viewer, audience (All in lowercase)\n    \"user_ref\": \"User Reference\"      //User ID or Reference. You may use it from your Information System. Post Call Reports include this data for your reference/reporting\n}"
+						},
+						"url": {
+							"raw": "{{api_url}}rooms/{{room_id}}/tokens",
+							"host": [
+								"{{api_url}}rooms"
+							],
+							"path": [
+								"{{room_id}}",
+								"tokens"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get List of Users in a Room",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api_url}}rooms/{{room_id}}/users",
+							"host": [
+								"{{api_url}}rooms"
+							],
+							"path": [
+								"{{room_id}}",
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Post-Session Reporting",
+			"item": [
+				{
+					"name": "Get Call Detail Report Based on RoomId",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api_url}}archive/room/{{room_id}}",
+							"host": [
+								"{{api_url}}archive"
+							],
+							"path": [
+								"room",
+								"{{room_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Call Detail Report Based on Conference Number",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{app_url}}cdr/conf/{conf_num}",
+							"host": [
+								"{{app_url}}cdr"
+							],
+							"path": [
+								"conf",
+								"{conf_num}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Call Detail Report Based on Date Range",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}cdr/period/{from_date}/{to_date}",
+							"host": [
+								"{{api_url}}cdr"
+							],
+							"path": [
+								"period",
+								"{from_date}",
+								"{to_date}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get Call Detail Report Based on RoomId and Date Range",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{app_url}}cdr/room-period/{room_id}/{from-date}/{to-date}",
+							"host": [
+								"{{app_url}}cdr"
+							],
+							"path": [
+								"room-period",
+								"{room_id}",
+								"{from-date}",
+								"{to-date}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Archives for a Room",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{app_url}}archive/room/{{room_id}}",
+							"host": [
+								"{{app_url}}archive"
+							],
+							"path": [
+								"room",
+								"{{room_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Archives for a Conference Number",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{app_url}}archive/conf/{conf_num}",
+							"host": [
+								"{{app_url}}archive"
+							],
+							"path": [
+								"conf",
+								"{conf_num}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Archives for a Period",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{app_url}}archive/period/{from_date}/{to_date}",
+							"host": [
+								"{{app_url}}archive"
+							],
+							"path": [
+								"period",
+								"{from_date}",
+								"{to_date}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Archives for a Room & Period",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{app_url}}archive/room-period/{room_id}/{from-date}/{to-date}",
+							"host": [
+								"{{app_url}}archive"
+							],
+							"path": [
+								"room-period",
+								"{room_id}",
+								"{from-date}",
+								"{to-date}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "{{app_key}}",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "{{app_id}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "app_id",
+			"value": "your-app-id",
+			"type": "string"
+		},
+		{
+			"key": "app_key",
+			"value": "you-app-key",
+			"type": "string"
+		},
+		{
+			"key": "api_url",
+			"value": "https://api.enablex.io/video/v1/",
+			"type": "string"
+		}
+	]
+}

@@ -1,0 +1,325 @@
+{
+	"info": {
+		"_postman_id": "e6383d16-5d9c-4ac8-ba54-7fec0bcaef3d",
+		"name": "EnableX Voice API",
+		"description": "Collection of EnableX Programmable Voice API\n\n# About Voice Call API\n\nWith EnableX Voice API it is easy to build high-quality hosted voice applications in the cloud. The EnableX Voice API allows you to enhance your existing website or app with voice interaction with the following features\n\n- Make outbound calls to a SIP/PSTN using REST API calls.\n    \n- Receive incoming calls on EnableX Voice server over a webhook and initiate additional actions\n    \n- Bridge the incoming call to another number.\n    \n- Play a custom IVR and collect user response over DTMF and take further programmable action\n    \n- Record and store inbound or outbound calls\n    \n- Create voice-only conference calls\n    \n- Call Bridging and voice broadcasting\n    \n- Can play DTMF tones on behalf of the user\n    \n- Send text-to-speech messages in 40 languages with different genders and accents\n    \n- Make outbound calls using REST-based API calls. Send text-to-speech messages in **117 languages** with different genders and accents\n    \n\n## API Authentication\n\nThe Voice Server API uses HTTP Basic Authentication mechanism to authenticate API calls. Each API call is validated via the authentication header.\n\nThe following Information is used as credentials to access Voice Server API for your Application in the HTTP basic authentication header in the API call request\n\n- **Application ID** or **APP_ID** as _Username_\n    \n- **Application Key** or **APP_KEY** as _Password_\n    \n\n<img src=\"https://content.pstmn.io/df28dd9f-0cfb-4210-ad0b-c6302bc5a78d/aW1hZ2UucG5n\" alt=\"\" height=\"200\" width=\"1132\">\n\nThe Authorization header in the above example contains a value XXXXX which is a base64 encoded string of the APP_ID:APP_KEY.\n\n### How to get APP_ID & APP_KEY\n\nAll API Credentials are paired to a Project. You will need to create a Project first to receive the API credentials. To create Project, follow the given steps:\n\n- Login to [EnableX Portal](https://portal.enablex.io)\n    \n- **Navigate**: {Main Menu} Projects / My Projects\n    \n- **Click**: Project Name – to reach Project Dashboard. Access Credentials for the Project can be found here.\n    \n\n## API Reference\n\nYou can refer to the detailed [API reference](https://www.enablex.io/developer/voice-api/) to understand better about the request/response structure, request arguments, response variables, webhooks, etc.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10735955",
+		"_collection_link": "https://enablexteam.postman.co/workspace/EnableX_Team-Workspace~12cd1290-2290-49be-937a-0e80ebd42368/collection/10735955-e6383d16-5d9c-4ac8-ba54-7fec0bcaef3d?action=share&source=collection_link&creator=10735955"
+	},
+	"item": [
+		{
+			"name": "Make an Outbound Call",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseData = pm.response.json();",
+							"",
+							"//setting room_id as enviroment variable to use it in further requests",
+							"pm.collectionVariables.set(\"voice_id\", responseData.voice_Id);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"service name\", //Optional parameter to name this service \n    \"owner_ref\": \"xzy\", //Free data field that will be returned as-is in response to an event. It can be used as means to co-relate requests and responses.\n    \"auto_record\": false, //Recording by default or on command\t\n    \"from\": \"CLI number\", //The CLI assigned on the outbound number. This number is matched with the configured number.\n    \"to\": \"Destination number\", //Destination number\n    \"action_on_connect\": //If set, prompt will be played automatically when destination number is connected\n    {\n        \"room\": {\n        \"room_id\" : \"room_id\"\n        }\n    },\n        \"connect\": {\n            \"from\": \"CLI\",\n            \"to\": \"bridge number\"\n        },\n   \n    \"play\": {\n        \"prompt_name\": \"prompt_name\", //Plays the prompt that has been uploaded with Prompt Id through portal provisioning\n                        \"asr\": true\n    },          //OR\n    \"play\": {\n        \"text\": \"your prompt here\", //TTS to play the prompt according to the parameter defined as following parameters below\n        \"language\": \"en-US\", //The preferred spoken language for TTS \n        \"voice\": \"female\", //Voice gender\n        \"asr\": true //Enable Automatic Speech Recognition, to detect words/sentences and return in the text\n    },\n    \"start_timeout\": 10, //Initial silence timeout before user start speaking. Range : 1 – 10 seconds. Default : 10 seconds.\n    \"recognizer_timeout\": 1, //Wait before the voice server returns the result after silence. Range : 1 – 10 seconds. Default : 2 seconds.              \n\n\"event_url\": \"https://yourserver.com/webhook\" //Webhook URL to be called for the application to take control\n}\n"
+				},
+				"url": {
+					"raw": "{{api_url}}call",
+					"host": [
+						"{{api_url}}call"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Receive Incoming Call",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{api_url}}call/{{voice_id}}/accept",
+					"host": [
+						"{{api_url}}call"
+					],
+					"path": [
+						"{{voice_id}}",
+						"accept"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bridge Call",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"from\": \"CLI number\",         //Originating phone number – also known as Caller Id\n\t\"to\" : \"Destination number\"       //The destination number or SIP URI\n}"
+				},
+				"url": {
+					"raw": "{{api_url}}call/{{voice_id}}/connect",
+					"host": [
+						"{{api_url}}call"
+					],
+					"path": [
+						"{{voice_id}}",
+						"connect"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Play Voice Prompt",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"prompt_name\": \"prompt file name to be played\",\n    \"text\": \"text to be played\",\n    \"language\": \"en-US\",\n    \"voice\": \"female\",\n    \"dtmf\": true, \n    \"prompt_ref\": \"welcome_ref\",\n    \"asr\": true, // user input via speech\n    \"start_timeout\" :10, // initial silence timeout before user start speaking\n    \"recognizer_timeout\" : 1 // wait timer before recognizer returns the result.\n}"
+				},
+				"url": {
+					"raw": "{{api_url}}placall/{{voice_Id}}/play",
+					"host": [
+						"{{api_url}}placall"
+					],
+					"path": [
+						"{{voice_Id}}",
+						"play"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Start Call Recording",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"start\": true,            //Boolean. Required to start recording; set to true.\r\n\t\"recording_name\": \"my_voice_recording\"        //If User specifies recording_name and any recording file with same name already exist, the request will fail \r\n}"
+				},
+				"url": {
+					"raw": "{{api_url}}call/{{voice_id}}/recording",
+					"host": [
+						"{{api_url}}call"
+					],
+					"path": [
+						"{{voice_id}}",
+						"recording"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Analyze Call",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api_url}}call/{{voice_id}}",
+					"host": [
+						"{{api_url}}call"
+					],
+					"path": [
+						"{{voice_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Call Hold-Unhold",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"hold\": true        //true: to hold the bridged call leg. false: to resume the bridged call leg.\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_url}}call/{{voice_id}}/hold",
+					"host": [
+						"{{api_url}}call"
+					],
+					"path": [
+						"{{voice_id}}",
+						"hold"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Stop Call Recording",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"stop\": true        //Boolean. Required to stop recording; set to true.\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_url}}call/{{voice_id}}/recording",
+					"host": [
+						"{{api_url}}call"
+					],
+					"path": [
+						"{{voice_id}}",
+						"recording"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Hang-Up Call",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{api_url}}call/{{voice_id}}",
+					"host": [
+						"{{api_url}}call"
+					],
+					"path": [
+						"{{voice_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "To join the video room",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{api_url}}room/room_Id/call/{{voice_id}}/join",
+					"host": [
+						"{{api_url}}room"
+					],
+					"path": [
+						"room_Id",
+						"call",
+						"{{voice_id}}",
+						"join"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "{{app_key}}",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "{{app_id}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "app_id",
+			"value": "your app_id",
+			"type": "string"
+		},
+		{
+			"key": "app_key",
+			"value": "your app_key",
+			"type": "string"
+		},
+		{
+			"key": "api_url",
+			"value": "https://api.enablex.io/voice/v1/",
+			"type": "string"
+		}
+	]
+}
