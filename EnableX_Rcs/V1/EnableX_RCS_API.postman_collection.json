@@ -563,6 +563,21 @@
 			"response": []
 		}
 	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "{{app_key}}",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "{{app_id}}",
+				"type": "string"
+			}
+		]
+	},
 	"event": [
 		{
 			"listen": "prerequest",
